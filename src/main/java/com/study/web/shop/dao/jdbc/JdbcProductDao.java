@@ -2,6 +2,7 @@ package com.study.web.shop.dao.jdbc;
 
 import com.study.web.shop.dao.ProductDao;
 import com.study.web.shop.dao.jdbc.mapper.ProductRowMapper;
+import com.study.web.shop.dao.jdbc.mapper.RowMapper;
 import com.study.web.shop.entity.Product;
 
 import java.sql.*;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcProductDao implements ProductDao {
-    private static final ProductRowMapper PRODUCT_ROW_MAPPER = new ProductRowMapper();
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = new ProductRowMapper();
 
     private Connection connection;
 
@@ -30,7 +31,7 @@ public class JdbcProductDao implements ProductDao {
              ResultSet resultSet = statement.executeQuery("SELECT id, name, picture_path, add_date, price FROM product");) {
 
             while (resultSet.next()) {
-                products.add(PRODUCT_ROW_MAPPER.getProduct(resultSet));
+                products.add(PRODUCT_ROW_MAPPER.mapRow(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
