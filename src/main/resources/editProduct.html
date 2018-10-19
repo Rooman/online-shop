@@ -18,11 +18,11 @@
     <h1>Edit Product:</h1>
     <form action="/product/edit" method="POST">
         <div class="form-group">
-            Name <input type="text" name="name" value="${name}"/>
-            Price <input type="text" name="price" value="${price}"/>
-            Picture URL <input type="text" name="picturePath" value="${picturePath}"/>
-            <input type="hidden" name="id" value="${id}"/>
-            <input type="submit" value="Save">
+            Name <input type="text" name="name" token="${name}"/>
+            Price <input type="text" name="price" token="${price}"/>
+            Picture URL <input type="text" name="picturePath" token="${picturePath}"/>
+            <input type="hidden" name="id" token="${id}"/>
+            <input type="submit" token="Save">
         </div>
     </form>
 </div>

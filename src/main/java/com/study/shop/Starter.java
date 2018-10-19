@@ -1,18 +1,23 @@
 package com.study.shop;
 
-import com.study.shop.dao.AuthDao;
 import com.study.shop.dao.ProductDao;
-import com.study.shop.dao.jdbc.JdbcAuthDao;
+import com.study.shop.dao.UserDao;
 import com.study.shop.dao.jdbc.JdbcProductDao;
-import com.study.shop.entity.Token;
-import com.study.shop.service.DefaultAuthService;
+import com.study.shop.dao.jdbc.JdbcUserDao;
+import com.study.shop.security.SecurityService;
+import com.study.shop.security.entity.Session;
 import com.study.shop.service.DefaultProductService;
-import com.study.shop.web.*;
+import com.study.shop.service.DefaultUserService;
+import com.study.shop.web.filter.AdminSecurityFilter;
+import com.study.shop.web.servlet.*;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import javax.servlet.DispatcherType;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class Starter {
@@ -20,50 +25,54 @@ public class Starter {
     public static void main(String[] args) throws Exception {
         // dao config
         ProductDao productDao = new JdbcProductDao();
-        AuthDao authDao = new JdbcAuthDao();
+        UserDao userDao = new JdbcUserDao();
 
         // security
-        List<Token> acceptedTokens = new ArrayList<>();
+        SecurityService securityService = new SecurityService();
+        List<Session> acceptedSessions = new ArrayList<>();
 
         // service config
         DefaultProductService defaultProductService = new DefaultProductService();
         defaultProductService.setProductDao(productDao);
-        DefaultAuthService defaultAuthService = new DefaultAuthService();
-        defaultAuthService.setAuthDao(authDao);
+        DefaultUserService defaultUserService = new DefaultUserService();
+        defaultUserService.setUserDao(userDao);
 
         // servlet config
-        AllProductsServlet allProductsServlet = new AllProductsServlet();
-        allProductsServlet.setProductService(defaultProductService);
-        allProductsServlet.setAuthService(defaultAuthService);
-        allProductsServlet.setAcceptedTokens(acceptedTokens);
+        AllProductsServlet allProductsServlet = new AllProductsServlet(defaultProductService);
+
         AddProductServlet addProductServlet = new AddProductServlet();
         addProductServlet.setProductService(defaultProductService);
-        addProductServlet.setAuthService(defaultAuthService);
-        addProductServlet.setAcceptedTokens(acceptedTokens);
+        addProductServlet.setUserService(defaultUserService);
+        addProductServlet.setAcceptedSessions(acceptedSessions);
+
         DeleteProductServlet deleteProductServlet = new DeleteProductServlet();
         deleteProductServlet.setProductService(defaultProductService);
-        deleteProductServlet.setAuthService(defaultAuthService);
-        deleteProductServlet.setAcceptedTokens(acceptedTokens);
+        deleteProductServlet.setUserService(defaultUserService);
+        deleteProductServlet.setAcceptedSessions(acceptedSessions);
+
         EditProductServlet editProductServlet = new EditProductServlet();
         editProductServlet.setProductService(defaultProductService);
-        editProductServlet.setAuthService(defaultAuthService);
-        editProductServlet.setAcceptedTokens(acceptedTokens);
-        LoginServlet loginServlet = new LoginServlet();
-        loginServlet.setAcceptedTokens(acceptedTokens);
-        loginServlet.setAuthService(defaultAuthService);
+        editProductServlet.setUserService(defaultUserService);
+        editProductServlet.setAcceptedSessions(acceptedSessions);
+
+        LoginServlet loginServlet = new LoginServlet(securityService);
 
         // server config
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setResourceBase("jar:file:!/");
         context.addServlet(new ServletHolder(allProductsServlet), "/");
         context.addServlet(new ServletHolder(allProductsServlet), "/products");
         context.addServlet(new ServletHolder(addProductServlet), "/product/add");
         context.addServlet(new ServletHolder(deleteProductServlet), "/product/delete/*");
         context.addServlet(new ServletHolder(editProductServlet), "/product/edit/*");
         context.addServlet(new ServletHolder(allProductsServlet), "/products/*");
+
         context.addServlet(new ServletHolder(new AssetsServlet()), "/assets/*");
+
         context.addServlet(new ServletHolder(loginServlet), "/login");
-        context.addServlet(new ServletHolder(loginServlet), "/login/*");
+
+
+        AdminSecurityFilter adminSecurityFilter = new AdminSecurityFilter();
+        context.addFilter(new FilterHolder(adminSecurityFilter), "/product/*", EnumSet.of(DispatcherType.REQUEST));
 
 
         Server server = new Server(8080);

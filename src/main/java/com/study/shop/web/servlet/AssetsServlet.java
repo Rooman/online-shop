@@ -1,4 +1,4 @@
-package com.study.shop.web;
+package com.study.shop.web.servlet;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
