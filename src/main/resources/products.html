@@ -10,86 +10,48 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/assets/css/style.css">
-    <title>Hello, world!</title>
+    <title>Online-shop</title>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">OnlineShop</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<#include "navBar.html">
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/product/add">Add Product</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<h1>Products:</h1>
 
-<div class="container">
-    <!--<h1>Add Product:</h1>-->
-    <!--<form action="/products/add" method="POST">-->
-    <!--<div class="form-group">-->
-    <!--Name <input type="text" name="name"/>-->
-    <!--Price <input type="number" name="price"/>-->
-    <!--Picture URL <input type="picturePath" name="picturePath"/>-->
-    <!--<input type="submit" value="Add">-->
-    <!--</div>-->
-    <!--</form>-->
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Added</th>
+        <th scope="col">Picture</th>
+        <th scope="col" celspan="2" style="text-align: center;">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#list products as product>
+    <tr>
+        <th scope="row">${product.id}</th>
+        <td> ${product.name}</td>
+        <td> ${product.price}</td>
+        <td> ${product.addDate}</td>
+        <td> <img src="${product.picturePath}" alt="Photo" height="100" width="100"></td>
+        <td>
+            <form action="/product/edit/${product.id}" method="GET">
+                <input type="image" src="/assets/img/edit.png" alt="Edit" height="50" width="50" />
+            </form>
+        </td>
+        <td>
+            <form action="/product/delete/${product.id}" method="GET">
+                <input type="image" src="/assets/img/delete.png" alt="Delete" height="50" width="50" />
+            </form>
+        </td>
+    </tr>
+    </#list>
+    </tbody>
+</table>
 
-    <!--<br/>-->
-    <!--<h1>Edit Product by ID:</h1>-->
-    <!--<form action="/products/edit" method="POST">-->
-    <!--<div class="form-group">-->
-    <!--ID <input type="number" name="id"/>-->
-    <!--Name <input type="text" name="name"/>-->
-    <!--Price <input type="number" name="price"/>-->
-    <!--Picture URL <input type="picturePath" name="picturePath"/>-->
-    <!--<input type="submit" value="Add">-->
-    <!--</div>-->
-    <!--</form>-->
-
-    <!--<h1>Delete Product:</h1>-->
-    <!--<form action="/products/delete" method="POST">-->
-    <!--<div class="form-group">-->
-    <!--Id <input type="number" name="id"/>-->
-    <!--<input type="submit" value="Delete">-->
-    <!--</div>-->
-    <!--</form>-->
-
-    <br/>
-    <h1>Product:</h1>
-
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Picture URL</th>
-            <th scope="col">Add Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list products as product>
-            <tr>
-                <th scope="row">${product.id}</th>
-                <td> ${product.name}</td>
-                <td> ${product.price}</td>
-                <td> ${product.picturePath}</td>
-                <td> ${product.addDate}</td>
-            </tr>
-        </#list>
-        </tbody>
-    </table>
-</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
