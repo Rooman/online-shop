@@ -2,6 +2,7 @@ package com.study.shop.web.servlet;
 
 import com.study.shop.entity.Product;
 import com.study.shop.service.ProductService;
+import com.study.shop.service.ServiceLocator;
 import com.study.shop.web.templater.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
@@ -12,10 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AllProductsServlet extends HttpServlet {
-    private ProductService productService;
+    private ProductService productService = ServiceLocator.getService(ProductService.class);
 
-    public AllProductsServlet(ProductService productService) {
-        this.productService = productService;
+    public AllProductsServlet() {
     }
 
     @Override

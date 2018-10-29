@@ -6,7 +6,7 @@ public class Product {
     private int id;
     private String name;
     private double price;
-    private LocalDateTime addDate;
+    private LocalDateTime addDate = LocalDateTime.now();
     private String picturePath;
 
     public Product() {

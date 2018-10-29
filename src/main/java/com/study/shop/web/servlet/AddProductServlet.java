@@ -2,6 +2,7 @@ package com.study.shop.web.servlet;
 
 import com.study.shop.security.entity.Session;
 import com.study.shop.service.ProductService;
+import com.study.shop.service.ServiceLocator;
 import com.study.shop.service.UserService;
 import com.study.shop.web.templater.PageGenerator;
 
@@ -12,9 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class AddProductServlet extends HttpServlet {
-    private ProductService productService;
-    private UserService userService;
-    private List<Session> acceptedSessions;
+    private ProductService productService = ServiceLocator.getService(ProductService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -35,20 +34,12 @@ public class AddProductServlet extends HttpServlet {
 
         int id = productService.add(name, price, picturePath);
 
-        String url = "/products/" + id;
-
-        resp.sendRedirect(url);
+        System.out.println("Product with id: " + id + " was created!");
+        resp.sendRedirect("/products");
     }
 
     public void setProductService(ProductService productService) {
         this.productService = productService;
     }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public void setAcceptedSessions(List<Session> acceptedSessions) {
-        this.acceptedSessions = acceptedSessions;
-    }
 }

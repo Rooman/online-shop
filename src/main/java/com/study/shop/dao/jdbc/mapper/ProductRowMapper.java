@@ -15,13 +15,16 @@ public class ProductRowMapper {
         int id = resultSet.getInt("id");
         double price = resultSet.getDouble("price");
         Timestamp timestamp = resultSet.getTimestamp("add_date");
-        LocalDateTime addDate = timestamp.toLocalDateTime();
+        if (timestamp != null) {
+            LocalDateTime addDate = timestamp.toLocalDateTime();
+            product.setAddDate(addDate);
+        }
+
         String picturePath = resultSet.getString("picture_path");
 
         product.setId(id);
         product.setName(name);
         product.setPrice(price);
-        product.setAddDate(addDate);
         product.setPicturePath(picturePath);
 
         return product;
